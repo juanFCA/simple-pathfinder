@@ -16,6 +16,8 @@
 		imagemPedra.src = "images/rock.png";
 		var imagemSoldier = new Image();
 		imagemSoldier.src = "images/soldier.png";
+		var imagemGhost = new Image();
+		imagemGhost.src = "images/ghost.png";
 		//15 linhas por 20 colunas
 		var mapa =[
 			[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
@@ -57,20 +59,25 @@
 			desenhaS();
 
 			function desenharPC(){
-				ctx.fillStyle = "blue";
-				//ctx.fillRect(SIZE*pc.x,SIZE*pc.y,SIZE,SIZE);
+				/*ctx.fillStyle = "blue";
+				ctx.fillRect(SIZE*pc.x,SIZE*pc.y,SIZE,SIZE);
 				ctx.strokeStyle = "red";
 				ctx.lineWidth = 3;
 				ctx.strokeRect(SIZE*pc.x,SIZE*pc.y,SIZE,SIZE);
+				*/
 				ctx.drawImage(imagemSoldier,16+0*32, 4*32, 32, 64,
 											pc.x*32, (pc.y-1)*32, 32, 64);
 			}
 			function desenharEny(){
+				/*
 				ctx.fillStyle = "red";
 				ctx.fillRect(SIZE*eny.x,SIZE*eny.y,SIZE,SIZE);
 				ctx.strokeStyle = "black";
 				ctx.lineWidth = 3;
 				ctx.strokeRect(SIZE*eny.x,SIZE*eny.y,SIZE,SIZE);
+				*/
+				ctx.drawImage(imagemGhost,0*40, 2*46, 40, 46,
+											eny.x*32-4, eny.y*32-7, 40, 46);
 			}
 			function iniciaS(){
 				for(var l =0; l < 15; l++){
