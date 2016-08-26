@@ -6,9 +6,14 @@
 	</head>
 	<body>
 		<h1>Exemplo Canvas 01</h1>
-		<canvas height="300" width="400"></canvas>	
+		<canvas height="480" width="640"></canvas>	
 
 		<script>
+		var SIZE = 32;
+		var imagemGrama = new Image();
+		imagemGrama.src = "images/grass.png";
+		var imagemPedra = new Image();
+		imagemPedra.src = "images/rock.png";
 		//15 linhas por 20 colunas
 		var mapa =[
 			[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
@@ -51,17 +56,17 @@
 
 			function desenharPC(){
 				ctx.fillStyle = "blue";
-				ctx.fillRect(20*pc.x,20*pc.y,20,20);
+				ctx.fillRect(SIZE*pc.x,SIZE*pc.y,SIZE,SIZE);
 				ctx.strokeStyle = "red";
 				ctx.lineWidth = 3;
-				ctx.strokeRect(20*pc.x,20*pc.y,20,20);
+				ctx.strokeRect(SIZE*pc.x,SIZE*pc.y,SIZE,SIZE);
 			}
 			function desenharEny(){
 				ctx.fillStyle = "red";
-				ctx.fillRect(20*eny.x,20*eny.y,20,20);
+				ctx.fillRect(SIZE*eny.x,SIZE*eny.y,SIZE,SIZE);
 				ctx.strokeStyle = "black";
 				ctx.lineWidth = 3;
-				ctx.strokeRect(20*eny.x,20*eny.y,20,20);
+				ctx.strokeRect(SIZE*eny.x,SIZE*eny.y,SIZE,SIZE);
 			}
 			function iniciaS(){
 				for(var l =0; l < 15; l++){
@@ -94,19 +99,19 @@
 				var atual = eny.s[eny.y][eny.x];
 				var menor = atual;
 				var dir = 0;
-				if(eny.s[eny.y-1][eny.x]<menor){
+				if(eny.s[eny.y-1][eny.x]>0 && eny.s[eny.y-1][eny.x]<menor){
 					menor = eny.s[eny.y-1][eny.x];
 					dir = 1;
 				}
-				if(eny.s[eny.y][eny.x+1]<menor){
+				if(eny.s[eny.y][eny.x+1]>0 && eny.s[eny.y][eny.x+1]<menor){
 					menor = eny.s[eny.y][eny.x+1];
 					dir = 2;
 				}
-				if(eny.s[eny.y+1][eny.x]<menor){
+				if(eny.s[eny.y+1][eny.x]>0 && eny.s[eny.y+1][eny.x]<menor){
 					menor = eny.s[eny.y+1][eny.x];
 					dir = 3;
 				}
-				if(eny.s[eny.y][eny.x-1]<menor){
+				if(eny.s[eny.y][eny.x-1]>0 && eny.s[eny.y][eny.x-1]<menor){
 					menor = eny.s[eny.y][eny.x-1];
 					dir = 4;
 				}
@@ -130,23 +135,26 @@
 				for(var l =0; l < 15; l++){
 					for(var c = 0; c <20; c++){
 						ctx.fillStyle = "red";
-						ctx.fillText(eny.s[l][c], 20*c+4, 20*l+10);
+						ctx.fillText(eny.s[l][c], SIZE*c+4, SIZE*l+10);
 					}
 				}
 			}
 			function desenharMapa(){
 				ctx.strokeStyle = "black";
 				ctx.lineWidth = 1;
-				for(var l=0; l<tela.height/20; l++){
-					for(var c=0; c<tela.width/20; c++){
-						if(mapa[l][c]==0){
-							ctx.fillStyle = "green";
-						}else{
-							ctx.fillStyle = "grey";
+				for(var l=0; l<tela.height/SIZE; l++){
+					for(var c=0; c<tela.width/SIZE; c++){
+						//			  img, sx, sy, sw, sh, dx, dy, dw, dh
+						ctx.drawImage(imagemGrama,((l+c)%3)*32,5*32, 32, 32,
+												  c*SIZE,l*SIZE, SIZE,SIZE);
+						if(mapa[l][c]==1){
+						
+							//			  img, sx, sy, sw, sh, dx, dy, dw, dh
+							ctx.drawImage(imagemPedra,0*32,0*32, 32, 32,
+													  c*SIZE,l*SIZE, SIZE,SIZE);
 						}
-								    //    x, y,  l, a
-						ctx.fillRect(20*c,20*l, 20,20);
-						ctx.strokeRect(20*c,20*l, 20,20);
+								    
+						
 					}
 				}
 			}
