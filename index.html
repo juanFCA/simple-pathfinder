@@ -46,17 +46,21 @@
 			var eny = {
 				x : 18,
 				y : 1,
-				s : []
+				s : [],
+				pose: 0
 			}
+
 			iniciaS();
-
-
-			desenharMapa();
-			desenharPC();
-			desenharEny();
-			//eny.s[pc.y][pc.x] = 1;
+			setTimeout(desenhaTudo, 200);
 			montaS(pc.y,pc.x, 1);
 			desenhaS();
+
+			function desenhaTudo(){
+					desenharMapa();
+					desenharPC();
+					desenharEny();
+					setTimeout(desenhaTudo, 200);
+			}
 
 			function desenharPC(){
 				/*ctx.fillStyle = "blue";
@@ -76,7 +80,7 @@
 				ctx.lineWidth = 3;
 				ctx.strokeRect(SIZE*eny.x,SIZE*eny.y,SIZE,SIZE);
 				*/
-				ctx.drawImage(imagemGhost,0*40, 2*46, 40, 46,
+				ctx.drawImage(imagemGhost,(++eny.pose%3)*40, 2*46, 40, 46,
 											eny.x*32-4, eny.y*32-7, 40, 46);
 			}
 			function iniciaS(){
