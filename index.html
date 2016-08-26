@@ -14,6 +14,8 @@
 		imagemGrama.src = "images/grass.png";
 		var imagemPedra = new Image();
 		imagemPedra.src = "images/rock.png";
+		var imagemSoldier = new Image();
+		imagemSoldier.src = "images/soldier.png";
 		//15 linhas por 20 colunas
 		var mapa =[
 			[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
@@ -56,10 +58,12 @@
 
 			function desenharPC(){
 				ctx.fillStyle = "blue";
-				ctx.fillRect(SIZE*pc.x,SIZE*pc.y,SIZE,SIZE);
+				//ctx.fillRect(SIZE*pc.x,SIZE*pc.y,SIZE,SIZE);
 				ctx.strokeStyle = "red";
 				ctx.lineWidth = 3;
 				ctx.strokeRect(SIZE*pc.x,SIZE*pc.y,SIZE,SIZE);
+				ctx.drawImage(imagemSoldier,16+0*32, 4*32, 32, 64,
+											pc.x*32, (pc.y-1)*32, 32, 64);
 			}
 			function desenharEny(){
 				ctx.fillStyle = "red";
