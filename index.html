@@ -10,14 +10,20 @@
 
 		<script>
 		var SIZE = 32;
+
 		var imagemGrama = new Image();
 		imagemGrama.src = "images/grass.png";
+
 		var imagemPedra = new Image();
 		imagemPedra.src = "images/rock.png";
+
 		var imagemSoldier = new Image();
 		imagemSoldier.src = "images/soldier.png";
+
 		var imagemGhost = new Image();
 		imagemGhost.src = "images/ghost.png";
+
+
 		//15 linhas por 20 colunas
 		var mapa =[
 			[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
@@ -41,19 +47,19 @@
 			var ctx = tela.getContext("2d");
 			var pc = {
 				x : 1,
-				y : 2
+				y : 2,
+				pose : 4
 			};
 			var eny = {
 				x : 18,
 				y : 1,
 				s : [],
-				pose: 0
+				pose : 0
 			}
-
 			iniciaS();
 			setTimeout(desenhaTudo, 200);
 			montaS(pc.y,pc.x, 1);
-			desenhaS();
+			//desenhaS();
 
 			function desenhaTudo(){
 					desenharMapa();
@@ -61,7 +67,6 @@
 					desenharEny();
 					setTimeout(desenhaTudo, 200);
 			}
-
 			function desenharPC(){
 				/*ctx.fillStyle = "blue";
 				ctx.fillRect(SIZE*pc.x,SIZE*pc.y,SIZE,SIZE);
@@ -69,18 +74,17 @@
 				ctx.lineWidth = 3;
 				ctx.strokeRect(SIZE*pc.x,SIZE*pc.y,SIZE,SIZE);
 				*/
-				ctx.drawImage(imagemSoldier,16+0*32, 4*32, 32, 64,
+				ctx.drawImage(imagemSoldier, 16+0*32, pc.pose*32, 32, 64,
 											pc.x*32, (pc.y-1)*32, 32, 64);
 			}
 			function desenharEny(){
-				/*
-				ctx.fillStyle = "red";
+				/*ctx.fillStyle = "red";
 				ctx.fillRect(SIZE*eny.x,SIZE*eny.y,SIZE,SIZE);
 				ctx.strokeStyle = "black";
 				ctx.lineWidth = 3;
 				ctx.strokeRect(SIZE*eny.x,SIZE*eny.y,SIZE,SIZE);
 				*/
-				ctx.drawImage(imagemGhost,(++eny.pose%3)*40, 2*46, 40, 46,
+				ctx.drawImage(imagemGhost, (++eny.pose%3)*40, 2*46, 40, 46,
 											eny.x*32-4, eny.y*32-7, 40, 46);
 			}
 			function iniciaS(){
@@ -110,7 +114,7 @@
 				montaS(l,c+1, a+1);
 
 			}
-			function moveEny(){
+			function moveEny() {
 				var atual = eny.s[eny.y][eny.x];
 				var menor = atual;
 				var dir = 0;
@@ -140,11 +144,16 @@
 					case 3:
 						eny.y++;
 						break;
-					case 4: 
+					case 4:
 						eny.x--;
 						break;
 				}
-
+				if(pc.x==eny.x && pc.y==eny.y) {
+					pc.x = 1;
+					pc.y = 2;
+					eny.x = 18;
+					eny.y = 1;
+				}
 			}
 			function desenhaS(){
 				for(var l =0; l < 15; l++){
@@ -159,30 +168,32 @@
 				ctx.lineWidth = 1;
 				for(var l=0; l<tela.height/SIZE; l++){
 					for(var c=0; c<tela.width/SIZE; c++){
-						//			  img, sx, sy, sw, sh, dx, dy, dw, dh
+						//			img, sy, sy , sw, sh, dx, dy, dw, dh
 						ctx.drawImage(imagemGrama,((l+c)%3)*32,5*32, 32, 32,
-												  c*SIZE,l*SIZE, SIZE,SIZE);
+									  				c*SIZE,l*SIZE, SIZE,SIZE	);
 						if(mapa[l][c]==1){
-						
-							//			  img, sx, sy, sw, sh, dx, dy, dw, dh
-							ctx.drawImage(imagemPedra,0*32,0*32, 32, 32,
-													  c*SIZE,l*SIZE, SIZE,SIZE);
-						}
-								    
-						
+							//			img, sy, sy , sw, sh, dx, dy, dw, dh
+							ctx.drawImage(imagemPedra, 0*32,0*32, 32, 32,
+										  				c*SIZE,l*SIZE, SIZE,SIZE);
+						}		
 					}
 				}
+				
 			}
 			function moveDireita() {
 				if(mapa[pc.y][pc.x+1]==0) pc.x++;
+				pc.pose = 6;
 			}
 			function moveEsquerda() {
 				if(mapa[pc.y][pc.x-1]==0) pc.x--;
+				pc.pose = 2;
 			}
 			function moveBaixo() {
 				if(mapa[pc.y+1][pc.x]==0) pc.y++;
+				pc.pose = 4;
 			}
 			function moveCima() {
+				pc.pose = 0;
 				if(mapa[pc.y-1][pc.x]==0) pc.y--;
 			}
 	function executaComando(evento){
@@ -206,7 +217,7 @@
 		desenharMapa();
 		desenharPC();
 		desenharEny();
-		desenhaS();
+		//desenhaS();
 	}
 	document.addEventListener("keydown", executaComando);
 
