@@ -1,30 +1,38 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Exemplo Canvas 01</title>
+		<title>Trabalho de Hipermídia</title>
 		<meta charset="utf-8" />
+
+		<style>
+			.div{
+				width: 100%;
+				height: 100%;
+				background-color: cyan;
+				font-size: 24pt;
+			}
+
+		</style>
 	</head>
 	<body>
-		<h1>Grupo 1</h1>
+		<h1>Trabalho de Hipermídia</h1>
+		<h2>Vidas: <var type="number" id="vidas">3</var></h2>
 		<canvas height="544" width="672"></canvas>
 
 		<script>
-		var SIZE = 32;
 
+		var vidas = document.getElementById("vidas");
+		var vida = 3;
+
+		var SIZE = 32;
 		var imagemGrama = new Image();
 		imagemGrama.src = "images/grass.png";
-
 		var imagemPedra = new Image();
 		imagemPedra.src = "images/rock.png";
-
 		var imagemSoldier = new Image();
 		imagemSoldier.src = "images/soldier.png";
-
 		var imagemGhost = new Image();
 		imagemGhost.src = "images/ghost.png";
-
-
-		//15 linhas por 20 colunas
 		var mapa =[
 			[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 			[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
@@ -44,9 +52,6 @@
 			[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
 			[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 		];
-
-
-		//Haha haha
 			var tela = document.querySelector("canvas");
 			var ctx = tela.getContext("2d");
 			var pc = {
@@ -60,41 +65,68 @@
 				s : [],
 				pose : 0
 			}
+
 			iniciaS();
 			setTimeout(desenhaTudo, 200);
 			montaS(pc.y,pc.x, 1);
-			//desenhaS();
-
+			geraPortas();
+			contadorVidas();
 			function desenhaTudo(){
 					desenharMapa();
 					desenharPC();
 					desenharEny();
 					setTimeout(desenhaTudo, 200);
 			}
+
+			function geraPortas(){
+				var a = 0;
+				for(var l = 4; l < 16; l+=4){
+					for(var c = 1; c < 19; c+=4){
+						if(mapa[l][c]==1){
+							a++;
+						}
+						if(a==1){
+							mapa[l][1+c-(Math.floor(2*Math.random()))] = 0;
+							a = 0;
+						}
+					}
+				}
+				a = 0;
+				for(var l = 1; l < 16; l+=4){
+					for(var c = 4; c < 19; c+=4){
+						if(mapa[l][c]==1){
+							a++;
+						}
+						if(a==1){
+							mapa[1+l-(Math.floor(2*Math.random()))][c] = 0;
+							a = 0;
+						}
+					}
+				}
+			}
 			function desenharPC(){
-				/*ctx.fillStyle = "blue";
-				ctx.fillRect(SIZE*pc.x,SIZE*pc.y,SIZE,SIZE);
-				ctx.strokeStyle = "red";
-				ctx.lineWidth = 3;
-				ctx.strokeRect(SIZE*pc.x,SIZE*pc.y,SIZE,SIZE);
-				*/
-				ctx.drawImage(imagemSoldier, 16+0*32, pc.pose*32, 32, 64,
-											pc.x*32, (pc.y-1)*32, 32, 64);
+				ctx.drawImage(imagemSoldier, 16+0*32, pc.pose*32, 32, 64, pc.x*32, (pc.y-1)*32, 32, 64);
 			}
 			function desenharEny(){
-				/*ctx.fillStyle = "red";
-				ctx.fillRect(SIZE*eny.x,SIZE*eny.y,SIZE,SIZE);
-				ctx.strokeStyle = "black";
-				ctx.lineWidth = 3;
-				ctx.strokeRect(SIZE*eny.x,SIZE*eny.y,SIZE,SIZE);
-				*/
-				ctx.drawImage(imagemGhost, (++eny.pose%3)*40, 2*46, 40, 46,
-											eny.x*32-4, eny.y*32-7, 40, 46);
+				ctx.drawImage(imagemGhost, (++eny.pose%3)*40, 2*46, 40, 46, eny.x*32-4, eny.y*32-7, 40, 46);
+			}
+			function contadorVidas(){
+
+				if(pc.x == eny.x && pc.y == eny.y){
+					vida--;
+					pc.x = 1;
+					pc.y = 2;
+					eny.x = 18;
+					eny.y = 1;
+					pc.pose = 4;
+				}
+
+				vidas.innerText = vida;
 			}
 			function iniciaS(){
-				for(var l =0; l < 15; l++){
+				for(var l =0; l < 17; l++){
 					eny.s[l] = [];
-					for(var c = 0; c <20; c++){
+					for(var c = 0; c <21; c++){
 						if(mapa[l][c]==1){
 							eny.s[l][c] = -1;
 						}else {
@@ -104,7 +136,7 @@
 				}
 			}
 			function montaS(l,c,a){
-				if(c<0 || l < 0 || c >=20 || l >=15){
+				if(c<0 || l < 0 || c >=21 || l >=17){
 					return;
 				}
 				if(eny.s[l][c]<=a){
@@ -116,7 +148,6 @@
 				montaS(l+1,c, a+1);
 				montaS(l,c-1, a+1);
 				montaS(l,c+1, a+1);
-
 			}
 			function moveEny() {
 				var atual = eny.s[eny.y][eny.x];
@@ -152,16 +183,10 @@
 						eny.x--;
 						break;
 				}
-				if(pc.x==eny.x && pc.y==eny.y) {
-					pc.x = 1;
-					pc.y = 2;
-					eny.x = 18;
-					eny.y = 1;
-				}
 			}
 			function desenhaS(){
-				for(var l =0; l < 15; l++){
-					for(var c = 0; c <20; c++){
+				for(var l =0; l < 17; l++){
+					for(var c = 0; c <21; c++){
 						ctx.fillStyle = "red";
 						ctx.fillText(eny.s[l][c], SIZE*c+4, SIZE*l+10);
 					}
@@ -172,13 +197,9 @@
 				ctx.lineWidth = 26;
 				for(var l=0; l<tela.height/SIZE; l++){
 					for(var c=0; c<tela.width/SIZE; c++){
-						//			img, sy, sy , sw, sh, dx, dy, dw, dh
-						ctx.drawImage(imagemGrama,((l+c)%3)*32,5*32, 32, 32,
-									  				c*SIZE,l*SIZE, SIZE,SIZE	);
+						ctx.drawImage(imagemGrama,((l+c)%3)*32,5*32, 32, 32, c*SIZE,l*SIZE, SIZE,SIZE);
 						if(mapa[l][c]==1){
-							//			img, sy, sy , sw, sh, dx, dy, dw, dh
-							ctx.drawImage(imagemPedra, 0*32,0*32, 32, 32,
-										  				c*SIZE,l*SIZE, SIZE,SIZE);
+							ctx.drawImage(imagemPedra, 0*32,0*32, 32, 32, c*SIZE,l*SIZE, SIZE,SIZE);
 						}		
 					}
 				}
@@ -200,31 +221,37 @@
 				pc.pose = 0;
 				if(mapa[pc.y-1][pc.x]==0) pc.y--;
 			}
-	function executaComando(evento){
-		console.log(evento.keyCode);
-		if(evento.keyCode == 39){
-			evento.preventDefault();
-			moveDireita();
-		} else if(evento.keyCode == 37){
-			evento.preventDefault();
-			moveEsquerda();
-		} else if(evento.keyCode == 38){
-			evento.preventDefault();
-			moveCima();
-		} else if(evento.keyCode == 40){
-			evento.preventDefault();
-			moveBaixo();
-		}
-		iniciaS();
-		montaS(pc.y,pc.x, 1);
-		moveEny();
-		desenharMapa();
-		desenharPC();
-		desenharEny();
-		//desenhaS();
-	}
-	document.addEventListener("keydown", executaComando);
+			function executaComando(evento){
 
+				console.log(evento.keyCode);
+
+				if(vida==0){
+					return;
+				}
+				else if(evento.keyCode == 39){
+					evento.preventDefault();
+					moveDireita();
+				} else if(evento.keyCode == 37){
+					evento.preventDefault();
+					moveEsquerda();
+				} else if(evento.keyCode == 38){
+					evento.preventDefault();
+					moveCima();
+				} else if(evento.keyCode == 40){
+					evento.preventDefault();
+					moveBaixo();
+				}
+
+				iniciaS();
+				montaS(pc.y,pc.x, 1);
+				moveEny();
+				desenharMapa();
+				desenharPC();
+				desenharEny();
+				contadorVidas();
+				//desenhaS();
+			}
+			document.addEventListener("keydown", executaComando);
 		</script>
 	</body>
 
