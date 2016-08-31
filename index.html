@@ -17,12 +17,15 @@
 	<body>
 		<h1>Trabalho de Hipermídia</h1>
 		<h2>Vidas: <var type="number" id="vidas">3</var></h2>
+		<h2>Nível: <var type="number" id="nivel">1</var></h2>
 		<canvas height="544" width="672"></canvas>
 
 		<script>
 
 		var vidas = document.getElementById("vidas");
 		var vida = 3;
+		var nivel = document.getElementById("nivel");
+		var fase = 1;
 
 		var SIZE = 32;
 		var imagemGrama = new Image();
@@ -78,6 +81,7 @@
 			geraPortas();
 			geraEscada();
 			contadorVidas();
+			contadorNivel();
 			function desenhaTudo(){
 					desenharMapa();
 					desenharPC();
@@ -120,7 +124,7 @@
 				}
 			}
 			function desenharEscada(){
-				ctx.drawImage(imagemEscada, 0*63, 0*63, 63, 63, escada.x*63, escada.y*63, 63, 63);
+				ctx.drawImage(imagemEscada, 0*32, 0*64, 32, 64, escada.x*32, (escada.y-1)*32, 32, 64);
 			}
 			function desenharPC(){
 				ctx.drawImage(imagemSoldier, 16+0*32, pc.pose*32, 32, 64, pc.x*32, (pc.y-1)*32, 32, 64);
@@ -128,6 +132,20 @@
 			function desenharEny(){
 				ctx.drawImage(imagemGhost, (++eny.pose%3)*40, 2*46, 40, 46, eny.x*32-4, eny.y*32-7, 40, 46);
 			}
+
+			function contadorNivel(){
+				if(pc.x == escada.x && pc.y == escada.y){
+					fase++;
+					pc.x = 1;
+					pc.y = 2;
+					eny.x = 18;
+					eny.y = 1;
+					pc.pose = 4;
+					geraEscada();
+				}
+				nivel.innerText = fase;
+			}
+
 			function contadorVidas(){
 
 				if(pc.x == eny.x && pc.y == eny.y){
@@ -141,6 +159,7 @@
 
 				vidas.innerText = vida;
 			}
+
 			function iniciaS(){
 				for(var l =0; l < 17; l++){
 					eny.s[l] = [];
@@ -268,6 +287,7 @@
 				desenharEny();
 				desenharEscada();
 				contadorVidas();
+				contadorNivel();
 				//desenhaS();
 			}
 			document.addEventListener("keydown", executaComando);
