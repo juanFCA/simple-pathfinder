@@ -26,18 +26,24 @@
 		var vida = 3;
 		var nivel = document.getElementById("nivel");
 		var fase = 1;
-
 		var SIZE = 32;
+
 		var imagemGrama = new Image();
 		imagemGrama.src = "images/grass.png";
+
 		var imagemPedra = new Image();
 		imagemPedra.src = "images/rock.png";
+
 		var imagemSoldier = new Image();
 		imagemSoldier.src = "images/soldier.png";
+
 		var imagemGhost = new Image();
 		imagemGhost.src = "images/ghost.png";
+
 		var imagemEscada = new Image();
 		imagemEscada.src = "images/escada.png";
+
+
 		var mapa =[
 			[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 			[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
@@ -65,8 +71,8 @@
 				pose : 4
 			}
 			var escada = {
-				x : 1,
-				y: 2
+				x : 0,
+				y : 0
 			}
 			var eny = {
 				x : 18,
@@ -147,7 +153,6 @@
 			}
 
 			function contadorVidas(){
-
 				if(pc.x == eny.x && pc.y == eny.y){
 					vida--;
 					pc.x = 1;
@@ -156,7 +161,6 @@
 					eny.y = 1;
 					pc.pose = 4;
 				}
-
 				vidas.innerText = vida;
 			}
 
@@ -172,6 +176,7 @@
 					}
 				}
 			}
+
 			function montaS(l,c,a){
 				if(c<0 || l < 0 || c >=21 || l >=17){
 					return;
@@ -186,6 +191,7 @@
 				montaS(l,c-1, a+1);
 				montaS(l,c+1, a+1);
 			}
+
 			function moveEny() {
 				var atual = eny.s[eny.y][eny.x];
 				var menor = atual;
@@ -221,6 +227,7 @@
 						break;
 				}
 			}
+
 			function desenhaS(){
 				for(var l =0; l < 17; l++){
 					for(var c = 0; c <21; c++){
@@ -229,6 +236,7 @@
 					}
 				}
 			}
+
 			function desenharMapa(){
 				ctx.strokeStyle = "black";
 				ctx.lineWidth = 26;
@@ -242,27 +250,33 @@
 				}
 				
 			}
+
 			function moveDireita() {
 				if(mapa[pc.y][pc.x+1]==0) pc.x++;
 				pc.pose = 6;
 			}
+
 			function moveEsquerda() {
 				if(mapa[pc.y][pc.x-1]==0) pc.x--;
 				pc.pose = 2;
 			}
+
 			function moveBaixo() {
 				if(mapa[pc.y+1][pc.x]==0) pc.y++;
 				pc.pose = 4;
 			}
+
 			function moveCima() {
 				pc.pose = 0;
 				if(mapa[pc.y-1][pc.x]==0) pc.y--;
 			}
+
 			function executaComando(evento){
 
 				console.log(evento.keyCode);
 
 				if(vida==0){
+					alert("Nível Alcançado :"+fase);
 					return;
 				}
 				else if(evento.keyCode == 39){
@@ -290,7 +304,9 @@
 				contadorNivel();
 				//desenhaS();
 			}
+
 			document.addEventListener("keydown", executaComando);
+			
 		</script>
 	</body>
 
