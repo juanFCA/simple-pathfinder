@@ -26,6 +26,9 @@
 		var imagemSoldier = new Image();
 		imagemSoldier.src = "images/soldier.png";
 
+		var imagemSoldierEspada = new Image();
+		imagemSoldierEspada.src = "images/soldierEspada.png";
+
 		var imagemGhost = new Image();
 		imagemGhost.src = "images/ghost.png";
 
@@ -211,8 +214,13 @@
 				ctx.lineWidth = 3;
 				ctx.strokeRect(SIZE*pc.x,SIZE*pc.y,SIZE,SIZE);
 				*/
-				ctx.drawImage(imagemSoldier, 16+0*32, pc.pose*32, 32, 64,
+				if(pc.espada==true){
+						ctx.drawImage(imagemSoldierEspada, 16+0*32, pc.pose*32, 32, 64,
 											pc.x*32, (pc.y-1)*32, 32, 64);
+					}else {
+						ctx.drawImage(imagemSoldier, 16+0*32, pc.pose*32, 32, 64,
+											pc.x*32, (pc.y-1)*32, 32, 64);
+					}
 			}
 			function desenharEny(){
 				/*ctx.fillStyle = "red";
@@ -225,6 +233,7 @@
 											eny.x*32-4, eny.y*32-7, 40, 46);
 			}
 			function contadorNivel(){
+				
 				if(pc.x == escada.x && pc.y == escada.y){
 					fase++;
 					pc.x = 1;
