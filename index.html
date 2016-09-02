@@ -1,63 +1,58 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Trabalho de Hipermídia</title>
+		<title>Exemplo Canvas 01</title>
 		<meta charset="utf-8" />
-
-		<style>
-			.div{
-				width: 100%;
-				height: 100%;
-				background-color: cyan;
-				font-size: 24pt;
-			}
-
-		</style>
 	</head>
 	<body>
 		<h1>Trabalho de Hipermídia</h1>
 		<h2>Vidas: <var type="number" id="vidas">3</var></h2>
+		<h2>Nível: <var type="number" id="nivel">1</var></h2>
 		<canvas height="544" width="672"></canvas>
 
 		<script>
-
 		var vidas = document.getElementById("vidas");
 		var vida = 3;
-
+		var nivel = document.getElementById("nivel");
+		var fase = 1;
 		var SIZE = 32;
+
 		var imagemGrama = new Image();
 		imagemGrama.src = "images/grass.png";
+
 		var imagemPedra = new Image();
 		imagemPedra.src = "images/rock.png";
+
 		var imagemSoldier = new Image();
 		imagemSoldier.src = "images/soldier.png";
+
 		var imagemGhost = new Image();
 		imagemGhost.src = "images/ghost.png";
-		var mapa =[
-			[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-			[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
-			[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
-			[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
-			[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-			[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
-			[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
-			[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
-			[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-			[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
-			[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
-			[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
-			[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-			[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
-			[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
-			[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
-			[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-		];
+
+		var imagemEscada = new Image();
+ 		imagemEscada.src = "images/escada.png";
+
+		var imagemEspadaChao = new Image();
+		imagemEspadaChao.src = "images/espadachao.png"
+
+		var imagemEscada = new Image();
+		imagemEscada.src = "images/escada.png";
+
+		var soldierEspada = new Image();
+		soldierEspada = "images/soldierEspada.png"
+
+
+		//17 linhas por 21 colunas
+		var mapa =[];
+		iniciaMapa();
+
 			var tela = document.querySelector("canvas");
 			var ctx = tela.getContext("2d");
 			var pc = {
 				x : 1,
 				y : 2,
-				pose : 4
+				pose : 4,
+				espada : false
 			};
 			var eny = {
 				x : 18,
@@ -66,63 +61,182 @@
 				pose : 0
 			}
 
+			var escada = {
+				x : 0,
+				y : 0
+			}
+
+			var espada = {
+				x: 0,
+				y: 0
+			}
+
+
+			function iniciaMapa(){
+				mapa =[
+					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+					[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
+					[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
+					[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
+					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+					[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
+					[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
+					[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
+					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+					[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
+					[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
+					[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
+					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+					[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
+					[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
+					[1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1],
+					[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+				];
+			}
+			//contadorVidas();
 			iniciaS();
 			setTimeout(desenhaTudo, 200);
 			montaS(pc.y,pc.x, 1);
 			geraPortas();
-			contadorVidas();
+			geraEscada();
+			contadorNivel();
+			geraEspada();
+
 			function desenhaTudo(){
 					desenharMapa();
 					desenharPC();
 					desenharEny();
+					desenharEscada();
+					desenharEspada();
 					setTimeout(desenhaTudo, 200);
 			}
 
-			function geraPortas(){
-				var a = 0;
-				for(var l = 4; l < 16; l+=4){
-					for(var c = 1; c < 19; c+=4){
-						if(mapa[l][c]==1){
-							a++;
-						}
-						if(a==1){
-							mapa[l][1+c-(Math.floor(2*Math.random()))] = 0;
-							a = 0;
-						}
-					}
+			/*function contadorVidas(){
+				if(pc.x == eny.x && pc.y == eny.y){
+					vida--;
 				}
-				a = 0;
+				vidas.innerText = vida;
+			}*/
+
+			function geraEscada(){
+				do {
+						escada.x = Math.floor(21*Math.random());
+						escada.y = Math.floor(17*Math.random()); 
+				} while (mapa[escada.y][escada.x]==1);
+			}
+
+
+			function geraPortas(){
+				geraPH();
+				geraPV();
+			}
+			function geraPV() {
+				var a = 0;
+				var random;
 				for(var l = 1; l < 16; l+=4){
 					for(var c = 4; c < 19; c+=4){
 						if(mapa[l][c]==1){
 							a++;
 						}
 						if(a==1){
-							mapa[1+l-(Math.floor(2*Math.random()))][c] = 0;
+							random = Math.floor(3*Math.random());
+							if(random == 0){
+								mapa[l][c] = 0;
+							}else if(random == 1){
+								mapa[l+2][c] = 0;
+							}else if(random == 2){
+								mapa[l+1][c] = 0;
+							}
 							a = 0;
 						}
 					}
 				}
 			}
+			function geraPH() {
+				var a = 0;
+				var random;
+				var porta = 0;
+				for(var l = 4; l < 16; l+=4){
+					for(var c = 1; c < 19; c+=4){
+						if(mapa[l][c]==1){
+							a++;
+						}
+						if(a==1){
+							random = Math.floor(4*Math.random());
+							if(random == 0){
+								mapa[l][c] = 0;
+								porta++;
+							}else if(random == 1){
+								mapa[l][c+2] = 0;
+								porta++;
+							}else if(random == 2){
+								mapa[l][c+1] = 0;
+								porta++;
+							}else{
+								mapa[l][c] = 1;
+							}
+							a = 0;
+						}
+					}
+					if(porta<1){
+						iniciaMapa();
+						geraPH();
+					}
+					porta = 0;
+				}
+			}
+
+			function desenharEscada(){
+				ctx.drawImage(imagemEscada, 0*32, 0*64, 32, 64, escada.x*32, (escada.y-1)*32, 32, 64);
+			}
+			function geraEspada(){
+				do {
+ 						espada.x = Math.floor(21*Math.random());
+ 						espada.y = Math.floor(17*Math.random());
+  			} while (mapa[espada.y][espada.x]==1);
+				if(espada.x - pc.x < 4 && espada.y - pc.y < 4 ){
+					geraEspada();
+				}
+			}
+			function desenharEspada(){
+				if(pc.espada==false){
+					ctx.drawImage(imagemEspadaChao, 0*32,0*32, 32, 32,
+													espada.x*SIZE,espada.y*SIZE, SIZE,SIZE);
+				}
+			}
 			function desenharPC(){
-				ctx.drawImage(imagemSoldier, 16+0*32, pc.pose*32, 32, 64, pc.x*32, (pc.y-1)*32, 32, 64);
+				/*ctx.fillStyle = "blue";
+				ctx.fillRect(SIZE*pc.x,SIZE*pc.y,SIZE,SIZE);
+				ctx.strokeStyle = "red";
+				ctx.lineWidth = 3;
+				ctx.strokeRect(SIZE*pc.x,SIZE*pc.y,SIZE,SIZE);
+				*/
+				ctx.drawImage(imagemSoldier, 16+0*32, pc.pose*32, 32, 64,
+											pc.x*32, (pc.y-1)*32, 32, 64);
 			}
 			function desenharEny(){
-				ctx.drawImage(imagemGhost, (++eny.pose%3)*40, 2*46, 40, 46, eny.x*32-4, eny.y*32-7, 40, 46);
+				/*ctx.fillStyle = "red";
+				ctx.fillRect(SIZE*eny.x,SIZE*eny.y,SIZE,SIZE);
+				ctx.strokeStyle = "black";
+				ctx.lineWidth = 3;
+				ctx.strokeRect(SIZE*eny.x,SIZE*eny.y,SIZE,SIZE);
+				*/
+				ctx.drawImage(imagemGhost, (++eny.pose%3)*40, 2*46, 40, 46,
+											eny.x*32-4, eny.y*32-7, 40, 46);
 			}
-			function contadorVidas(){
-
-				if(pc.x == eny.x && pc.y == eny.y){
-					vida--;
+			function contadorNivel(){
+				if(pc.x == escada.x && pc.y == escada.y){
+					fase++;
 					pc.x = 1;
 					pc.y = 2;
 					eny.x = 18;
 					eny.y = 1;
 					pc.pose = 4;
+					geraEscada();
 				}
-
-				vidas.innerText = vida;
+				nivel.innerText = fase;
 			}
+
 			function iniciaS(){
 				for(var l =0; l < 17; l++){
 					eny.s[l] = [];
@@ -143,11 +257,12 @@
 					return;
 				}
 				eny.s[l][c] = a;
-				
+
 				montaS(l-1,c, a+1);
 				montaS(l+1,c, a+1);
 				montaS(l,c-1, a+1);
 				montaS(l,c+1, a+1);
+
 			}
 			function moveEny() {
 				var atual = eny.s[eny.y][eny.x];
@@ -183,6 +298,24 @@
 						eny.x--;
 						break;
 				}
+				if(pc.x==eny.x && pc.y==eny.y) {
+					if(pc.espada==true){
+						eny.x = 18;
+						eny.y = 1;
+						pc.espada = false;
+						geraEspada();
+					}else{
+						vida--;
+						vidas.innerText = vida;
+						pc.x = 1;
+						pc.y = 2;
+						eny.x = 18;
+						eny.y = 1;
+					}
+				}
+				if(pc.x==espada.x && pc.y==espada.y){
+					pc.espada = true;
+				}
 			}
 			function desenhaS(){
 				for(var l =0; l < 17; l++){
@@ -194,16 +327,20 @@
 			}
 			function desenharMapa(){
 				ctx.strokeStyle = "black";
-				ctx.lineWidth = 26;
+				ctx.lineWidth = 1;
 				for(var l=0; l<tela.height/SIZE; l++){
 					for(var c=0; c<tela.width/SIZE; c++){
-						ctx.drawImage(imagemGrama,((l+c)%3)*32,5*32, 32, 32, c*SIZE,l*SIZE, SIZE,SIZE);
+						//			img, sy, sy , sw, sh, dx, dy, dw, dh
+						ctx.drawImage(imagemGrama,((l+c)%3)*32,5*32, 32, 32,
+									  				c*SIZE,l*SIZE, SIZE,SIZE	);
 						if(mapa[l][c]==1){
-							ctx.drawImage(imagemPedra, 0*32,0*32, 32, 32, c*SIZE,l*SIZE, SIZE,SIZE);
-						}		
+							//			img, sy, sy , sw, sh, dx, dy, dw, dh
+							ctx.drawImage(imagemPedra, 0*32,0*32, 32, 32,
+										  				c*SIZE,l*SIZE, SIZE,SIZE);
+						}
 					}
 				}
-				
+
 			}
 			function moveDireita() {
 				if(mapa[pc.y][pc.x+1]==0) pc.x++;
@@ -221,37 +358,40 @@
 				pc.pose = 0;
 				if(mapa[pc.y-1][pc.x]==0) pc.y--;
 			}
-			function executaComando(evento){
+	function executaComando(evento){
+		console.log(evento.keyCode);
 
-				console.log(evento.keyCode);
+		if(vida==0){
+			alert("Nível Alcançado :"+fase);
+			return;
+		}
+		else if(evento.keyCode == 39){
+			evento.preventDefault();
+			moveDireita();
+		} else if(evento.keyCode == 37){
+			evento.preventDefault();
+			moveEsquerda();
+		} else if(evento.keyCode == 38){
+			evento.preventDefault();
+			moveCima();
+		} else if(evento.keyCode == 40){
+			evento.preventDefault();
+			moveBaixo();
+		}
+		//contadorVidas();
+		iniciaS();
+		montaS(pc.y,pc.x, 1);
+		moveEny();
+		desenharMapa();
+		desenharPC();
+		desenharEny();
+		desenharEscada();
+		contadorNivel();
+		desenharEspada();
+		//desenhaS();
+	}
+	document.addEventListener("keydown", executaComando);
 
-				if(vida==0){
-					return;
-				}
-				else if(evento.keyCode == 39){
-					evento.preventDefault();
-					moveDireita();
-				} else if(evento.keyCode == 37){
-					evento.preventDefault();
-					moveEsquerda();
-				} else if(evento.keyCode == 38){
-					evento.preventDefault();
-					moveCima();
-				} else if(evento.keyCode == 40){
-					evento.preventDefault();
-					moveBaixo();
-				}
-
-				iniciaS();
-				montaS(pc.y,pc.x, 1);
-				moveEny();
-				desenharMapa();
-				desenharPC();
-				desenharEny();
-				contadorVidas();
-				//desenhaS();
-			}
-			document.addEventListener("keydown", executaComando);
 		</script>
 	</body>
 
