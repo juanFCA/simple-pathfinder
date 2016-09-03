@@ -1,51 +1,110 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Exemplo Canvas 01</title>
+		<title>Trabalho de Hipermídia</title>
 		<meta charset="utf-8" />
+		<style type="text/css">
+			body {
+	   			background: teal;
+	   			background: url('images/fundo.png');
+	   			margin: 0;
+	   			padding: 0;
+			}
+			#telajogo {
+			   	text-align: center;
+			    padding: 5px;
+	   			width: 674px;
+	   			height: 546px;
+			}
+			#corpojogo {
+			   margin: 0 auto;
+			   margin-top: 10px;
+			   padding: 5px;
+			   width: 684px;
+			   height: 740px;
+			}
+			#cabeçalho {
+			    padding: 5px;
+	   			width: 674px;
+			}
+			#titulo {
+			   font: 40px fantasy;
+			   text-align: center;
+			   color: #FFD700;
+			   text-shadow: 2px 2px 4px black;
+			}
+			.painel {
+				display: inline;
+				padding: 0px;
+				margin: 0px;
+			}
+			#pnivel {
+				float: right;
+			  	font: 30px fantasy;
+			 	text-align: right;
+			 	color: #FFFF00;
+			 	width: 332px;
+				height: 36px;
+			 	text-shadow: 2px 2px 4px black;
+			}
+			#pvida {
+				float: left;
+			  	width: 332px;
+			  	height: 36px;
+			}
+			#mapa {
+			   position: relative;
+			   border: 2px inset gray;
+			}
+		</style>
 	</head>
-	<body>
-		<h1>Exemplo Canvas 01</h1>
-		<canvas height="544" width="672" id="mapa"></canvas>
-		<canvas height="32" width="320" id="nivel"></canvas>
-		<canvas height="32" width="320" id="vida"></canvas>
+   	<body>
+        <div id="corpojogo">
+       		<div id="cabeçalho">
+       			<div id="titulo">Trabalho de Hipermídia</div>
+       			<div class="painel" id="pvida"><canvas height="36" width="300" id="tvida"></div>
+            	<div class="painel" id="pnivel">Nível: <var type="number" id="pfase">1</var></div>
+         	</div>
+         	<div id="telajogo">
+            	<canvas height="544" width="672" id="mapa"></canvas>
+        	</div>
+        </div>
 
 		<script>
-		var SIZE = 32;
-		var imagemGrama = new Image();
-		imagemGrama.src = "images/grass.png";
-		var imagemPedra = new Image();
-		imagemPedra.src = "images/rock.png";
-		var imagemSoldier = new Image();
-		imagemSoldier.src = "images/soldier.png";
-		var imagemSoldierEspada = new Image();
-		imagemSoldierEspada.src = "images/soldierEspada.png";
-		var imagemGhost = new Image();
-		imagemGhost.src = "images/ghost.png";
-		var imagemEscada = new Image();
- 		imagemEscada.src = "images/escada.png";
-		var imagemEspadaChao = new Image();
-		imagemEspadaChao.src = "images/espadachao.png"
-		var imagemCoracao = new Image();
-		imagemCoracao.src = "images/heart.png"
-		//17 linhas por 21 colunas
 
-		var mapa =[];
-		iniciaMapa();
+			var SIZE = 32;
+			var imagemGrama = new Image();
+			imagemGrama.src = "images/grass.png";
+			var imagemPedra = new Image();
+			imagemPedra.src = "images/rock.png";
+			var imagemSoldier = new Image();
+			imagemSoldier.src = "images/soldier.png";
+			var imagemSoldierEspada = new Image();
+			imagemSoldierEspada.src = "images/soldierEspada.png";
+			var imagemGhost = new Image();
+			imagemGhost.src = "images/ghost.png";
+			var imagemEscada = new Image();
+	 		imagemEscada.src = "images/escada.png";
+			var imagemEspadaChao = new Image();
+			imagemEspadaChao.src = "images/espadaChao.png"
+			var imagemCoracao = new Image();
+			imagemCoracao.src = "images/heart.png"
+			//17 linhas por 21 colunas
 
-		var nivel = 1;
-		var vida = 3;
-		var enyQ = 1;
+			var mapa =[];
+			iniciaMapa();
+			
+			var fase = document.getElementById("pfase");		
+			var nivel = 1;
+			var vida = 3;
+			var enyQ = 1;
 
-			var tela = document.getElementById('mapa');
+			var tela = document.getElementById("mapa");
 			var ctx = tela.getContext("2d");
-
-			var telaNivel = document.getElementById('nivel');
-			var cty = telaNivel.getContext("2d");
-
-			var telaVida = document.getElementById('vida');
-			var ctz = telaVida.getContext("2d");
-
+			
+			var telaVida = document.getElementById("tvida");
+			var cty = telaVida.getContext("2d");
+			
 			var pc = {
 				x : 1,
 				y : 2,
@@ -116,7 +175,7 @@
 					desenharEny();
 					desenharEspada();
 					desenharEscada();
-					desenharVidaNivel();
+					desenharNivelVida();
 					setTimeout(desenhaTudo, 200);
 			}
 			function posicionaEny(){
@@ -214,27 +273,15 @@
 				}
 			}
 			function desenharPC(){
-				/*ctx.fillStyle = "blue";
-				ctx.fillRect(SIZE*pc.x,SIZE*pc.y,SIZE,SIZE);
-				ctx.strokeStyle = "red";
-				ctx.lineWidth = 3;
-				ctx.strokeRect(SIZE*pc.x,SIZE*pc.y,SIZE,SIZE);
-				*/
 				if(pc.espada==true){
-						ctx.drawImage(imagemSoldierEspada, 16+0*32, pc.pose*32, 32, 64,
+					ctx.drawImage(imagemSoldierEspada, 16+0*32, pc.pose*32, 32, 64,
 											pc.x*32, (pc.y-1)*32, 32, 64);
-					}else {
-						ctx.drawImage(imagemSoldier, 16+0*32, pc.pose*32, 32, 64,
+				}else {
+					ctx.drawImage(imagemSoldier, 16+0*32, pc.pose*32, 32, 64,
 											pc.x*32, (pc.y-1)*32, 32, 64);
-					}
+				}
 			}
 			function desenharEny(){
-				/*ctx.fillStyle = "red";
-				ctx.fillRect(SIZE*eny.x,SIZE*eny.y,SIZE,SIZE);
-				ctx.strokeStyle = "black";
-				ctx.lineWidth = 3;
-				ctx.strokeRect(SIZE*eny.x,SIZE*eny.y,SIZE,SIZE);
-				*/
 				for(var i = 1; i<= enyQ; i++){
 					if(eny[i].vivo==true){
 						ctx.drawImage(imagemGhost, (++eny[i].pose%3)*40, 2*46, 40, 46,
@@ -321,6 +368,7 @@
 						iniciaS();
 						iniciaMontaS();
 					}
+
 					if(pc.x==eny[i].x && pc.y==eny[i].y && eny[i].vivo == true) {
 						if(pc.espada==true){
 							pc.espada = false;
@@ -337,6 +385,16 @@
 
 				if(pc.x==espada.x && pc.y==espada.y){
 					pc.espada = true;
+				}
+			}
+			function desenharNivelVida(){
+				fase.innerText = nivel;
+				for(var i= 0; i<3; i++){
+					cty.fillStyle = "blue";
+					cty.fillRect(i*SIZE,0,SIZE,SIZE);
+				}
+				for(var i = 0; i < vida; i++){
+					cty.drawImage(imagemCoracao, i*32, 0*32, 32, 32);
 				}
 			}
 			function desenhaS(){
@@ -363,23 +421,6 @@
 					}
 				}
 			}
-			function desenharVidaNivel(){
-				for(var i = 0; i < nivel; i++){
-					cty.fillStyle = "red";
-					cty.fillRect(nivel*SIZE,0,SIZE,SIZE);
-					cty.strokeStyle = "black";
-					cty.lineWidth = 3;
-					cty.strokeRect(nivel*SIZE,0,SIZE,SIZE);
-				}
-				for(var i= 0; i<=5; i++){
-					ctz.fillStyle = "white";
-					ctz.fillRect(i*SIZE,0,SIZE,SIZE);
-				}
-				for(var i = 0; i < vida; i++){
-					ctz.drawImage(imagemCoracao, i*32, 0*32, 32, 32);
-				}
-
-			}
 			function moveDireita() {
 				if(mapa[pc.y][pc.x+1]==0) pc.x++;
 				pc.pose = 6;
@@ -396,33 +437,37 @@
 				pc.pose = 0;
 				if(mapa[pc.y-1][pc.x]==0) pc.y--;
 			}
-	function executaComando(evento){
-		console.log(evento.keyCode);
-		if(evento.keyCode == 39){
-			evento.preventDefault();
-			moveDireita();
-		} else if(evento.keyCode == 37){
-			evento.preventDefault();
-			moveEsquerda();
-		} else if(evento.keyCode == 38){
-			evento.preventDefault();
-			moveCima();
-		} else if(evento.keyCode == 40){
-			evento.preventDefault();
-			moveBaixo();
-		}
-		iniciaS();
-		montaS(pc.y,pc.x, 1);
-		moveEny();
-		desenharMapa();
-		desenharPC();
-		desenharEny();
-		desenharEspada();
-		desenharEscada();
-		desenharVidaNivel();
-		//desenhaS();
-	}
-	document.addEventListener("keydown", executaComando);
+			function executaComando(evento){
+				console.log(evento.keyCode);
+				if(vida==0){
+					alert("Nível Alcançado :"+nivel);
+					return;
+				}
+				if(evento.keyCode == 39){
+					evento.preventDefault();
+					moveDireita();
+				} else if(evento.keyCode == 37){
+					evento.preventDefault();
+					moveEsquerda();
+				} else if(evento.keyCode == 38){
+					evento.preventDefault();
+					moveCima();
+				} else if(evento.keyCode == 40){
+					evento.preventDefault();
+					moveBaixo();
+				}
+				iniciaS();
+				montaS(pc.y,pc.x, 1);
+				moveEny();
+				desenharMapa();
+				desenharPC();
+				desenharEny();
+				desenharEspada();
+				desenharEscada();
+				desenharNivelVida();
+				//desenhaS();
+			}
+			document.addEventListener("keydown", executaComando);
 		</script>
 	</body>
 
