@@ -258,13 +258,15 @@
  				ctx.drawImage(imagemEscada, 0*32, 0*32, 32, 64, escada.x*32, escada.y*32-32, 32, 64);
  			}
 			function geraEspada(){
-				do {
+				if(pc.espada==false) {
+					do {
  						espada.x = Math.floor(21*Math.random());
  						espada.y = Math.floor(17*Math.random());
-  			} while (mapa[espada.y][espada.x]==1);
-				if(espada.x - pc.x < 4 && espada.y - pc.y < 4 ){
-					geraEspada();
-				}
+  					} while (mapa[espada.y][espada.x]==1);
+					if(espada.x - pc.x < 4 && espada.y - pc.y < 4 ){
+						geraEspada();
+					}
+				}	
 			}
 			function desenharEspada(){
 				if(pc.espada==false){
