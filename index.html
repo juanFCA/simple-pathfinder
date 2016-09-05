@@ -391,10 +391,7 @@
 			}
 			function desenharNivelVida(){
 				fase.innerText = nivel;
-				for(var i= 0; i<3; i++){
-					cty.fillStyle = "blue";
-					cty.fillRect(i*SIZE,0,SIZE,SIZE);
-				}
+				cty.clearRect(0,0,telaVida.width, telaVida.height);
 				for(var i = 0; i < vida; i++){
 					cty.drawImage(imagemCoracao, i*32, 0*32, 32, 32);
 				}
